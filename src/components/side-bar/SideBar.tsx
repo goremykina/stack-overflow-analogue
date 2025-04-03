@@ -1,24 +1,61 @@
-import { Drawer, List, ListItem, ListItemText } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Drawer, List, ListItemButton, ListItemText} from "@mui/material";
+import HouseIcon from '@mui/icons-material/House';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
+import theme from '../../theme';
 
-const Sidebar = () => {
+const SideBar = () => {
     return (
         <Drawer
-            anchor="left"
             variant="permanent"
             sx={{
-                width: 240,
+                width: 300,
                 flexShrink: 0,
-                "& .MuiDrawer-paper": { width: 240, boxSizing: "border-box" },
+                "& .MuiDrawer-paper": {
+                    width: 300,
+                    boxSizing: "border-box",
+                    position: "relative",
+                    background: `${theme.palette.primary.main}`,
+                    borderTop: '1.5px solid rgba(0, 0, 0, 0.12);\n' + '}',
+                    boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'
+                },
             }}
         >
-            <List>
-                <ListItem component={Link} to="/">
-                    <ListItemText primary="Home" />
-                </ListItem>
+            <List sx={{ display: "flex", flexDirection: "column"}}>
+                <ListItemButton component="a" href="/" sx={{ display: "flex", gap: 2 }}>
+                    <HouseIcon />
+                    <ListItemText primary="Home" sx={{ fontSize: 16, margin: 0 }} />
+                </ListItemButton>
+
+                <ListItemButton component="a" href="/" sx={{ display: "flex", gap: 2 }}>
+                    <PersonOutlineIcon/>
+                    <ListItemText primary="My Account" />
+                </ListItemButton>
+
+                <ListItemButton component="a" href="/" sx={{ display: "flex", gap: 2 }}>
+                    <TextSnippetIcon />
+                    <ListItemText primary="Post snippet" />
+                </ListItemButton>
+
+                <ListItemButton component="a" href="/" sx={{ display: "flex", gap: 2 }}>
+                    <TextSnippetIcon />
+                    <ListItemText primary="My snippet" />
+                </ListItemButton>
+
+                <ListItemButton component="a" href="/" sx={{ display: "flex", gap: 2 }}>
+                    <QuestionMarkIcon />
+                    <ListItemText primary="Questions" />
+                </ListItemButton>
+
+                <ListItemButton component="a" href="/" sx={{ display: "flex", gap: 2 }}>
+                    <PeopleOutlineIcon />
+                    <ListItemText primary="Users" />
+                </ListItemButton>
             </List>
         </Drawer>
     );
 };
 
-export default Sidebar;
+export default SideBar;
