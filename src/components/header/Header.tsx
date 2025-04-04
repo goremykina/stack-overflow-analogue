@@ -1,22 +1,12 @@
-import { useState } from 'react';
 import {
     AppBar,
     Toolbar,
     Typography,
     Button,
-    Select,
-    FormControl,
-    SelectChangeEvent,
-    MenuItem
+    Link
 } from '@mui/material';
 
 const Header = () => {
-    const [language, setLanguage] = useState('EN');
-
-    const handleChange = (event: SelectChangeEvent) => {
-        setLanguage(event.target.value);
-    };
-
     return (
         <AppBar position="sticky" sx={{ padding: 0.5}}>
             <Toolbar>
@@ -25,18 +15,6 @@ const Header = () => {
                 </Typography>
 
                 <Button color="inherit">Login</Button>
-
-                <FormControl sx={{ width: 100, marginLeft: 3}}>
-                    <Select
-                        value={language}
-                        onChange={handleChange}
-                    >
-                        <MenuItem value='RU'>RU</MenuItem>
-                        <MenuItem value='PL'>PL</MenuItem>
-                        <MenuItem value='EN'>EN</MenuItem>
-                    </Select>
-                </FormControl>
-
             </Toolbar>
         </AppBar>
     );
