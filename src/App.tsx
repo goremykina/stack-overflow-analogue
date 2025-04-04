@@ -5,10 +5,12 @@ import HomePage from "./pages/home/HomePage.tsx";
 import Header from "./components/header/Header.tsx";
 import SideBar from "./components/side-bar/SideBar.tsx";
 import { Box, CssBaseline } from "@mui/material";
+import { routes } from "./routes.ts";
 
 const router = createBrowserRouter([
-    { path: "/", element: <HomePage /> },
-    { path: "/register", element: <RegisterPage /> }
+    { path: routes.home, element: <HomePage /> },
+    { path: routes.signUp, element: <RegisterPage /> },
+    { path: routes.login, element: <LoginPage /> },
 ])
 
 function App() {

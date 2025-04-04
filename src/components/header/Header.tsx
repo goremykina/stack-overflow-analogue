@@ -5,6 +5,7 @@ import {
     Button,
     Link
 } from '@mui/material';
+import { routes } from '../../routes';
 
 const Header = () => {
     return (
@@ -14,7 +15,7 @@ const Header = () => {
                     Codelang
                 </Typography>
 
-                <Button color="inherit">Login</Button>
+                <Button component={Link} color="inherit" href={routes.login}>Login</Button>
             </Toolbar>
         </AppBar>
     );
