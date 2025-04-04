@@ -1,6 +1,6 @@
 import './App.css'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import RegisterPage from "./pages/register/RegisterPage.tsx";
+import SignUpPage from "./pages/sign-up/SignUpPage.tsx";
 import HomePage from "./pages/home/HomePage.tsx";
 import Header from "./components/header/Header.tsx";
 import SideBar from "./components/side-bar/SideBar.tsx";
@@ -9,7 +9,7 @@ import { routes } from "./routes.ts";
 
 const router = createBrowserRouter([
     { path: routes.home, element: <HomePage /> },
-    { path: routes.signUp, element: <RegisterPage /> },
+    { path: routes.signUp, element: <SignUpPage /> },
     { path: routes.login, element: <LoginPage /> },
 ])
 
