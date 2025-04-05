@@ -4,6 +4,9 @@ import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { routes } from '../../routes.ts';
+import { login } from "../../api/auth.ts";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const schema = z.object({
     email: z.string().email().nonempty(),
@@ -11,6 +14,8 @@ const schema = z.object({
 });
 
 const LoginPage = () => {
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
     const {
         control,
         handleSubmit,
@@ -19,11 +24,21 @@ const LoginPage = () => {
         defaultValues: {
             email: '',
             password: '',
-        }
+        },
+        disabled: loading
     });
 
-    const onSubmit = (data: any) => {
-        console.log("Form Data:", data);
+    const onSubmit = async (data: { email: string, password: string }) => {
+        try {
+            setLoading(true);
+            await login({
+                username: data.email,
+                password: data.password
+            });
+            navigate(routes.home);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -77,7 +92,13 @@ const LoginPage = () => {
                             />
                         )}
                     />
-                    <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth sx={{ mt: 2 }}
+                        loading={loading}
+                    >
                         Login
                     </Button>
                 </form>
