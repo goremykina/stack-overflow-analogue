@@ -5,6 +5,7 @@ import HomePage from "./pages/home/HomePage.tsx";
 import Header from "./components/header/Header.tsx";
 import SideBar from "./components/side-bar/SideBar.tsx";
 import { Box, CssBaseline } from "@mui/material";
+import LoginPage from "./pages/login/LoginPage.tsx";
 import { routes } from "./routes.ts";
 
 const router = createBrowserRouter([
