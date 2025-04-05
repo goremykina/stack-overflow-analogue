@@ -1,10 +1,11 @@
-import { Drawer, List, ListItemButton, ListItemText} from "@mui/material";
+import { Drawer, List, ListItemButton } from "@mui/material";
 import HouseIcon from '@mui/icons-material/House';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import theme from '../../theme';
+import Link from "../link/Link";
 
 const SideBar = () => {
     return (
@@ -24,35 +25,47 @@ const SideBar = () => {
             }}
         >
             <List sx={{ display: "flex", flexDirection: "column"}}>
-                <ListItemButton component="a" href="/" sx={{ display: "flex", gap: 2 }}>
-                    <HouseIcon />
-                    <ListItemText primary="Home" sx={{ fontSize: 16, margin: 0 }} />
-                </ListItemButton>
+                <Link color={'inherit'} underline={'none'} to={'/'}>
+                    <ListItemButton sx={{ display: "flex", gap: 2 }}>
+                        <HouseIcon />
+                        Home
+                    </ListItemButton>
+                </Link>
 
-                <ListItemButton component="a" href="/" sx={{ display: "flex", gap: 2 }}>
-                    <PersonOutlineIcon/>
-                    <ListItemText primary="My Account" />
-                </ListItemButton>
+                <Link color={'inherit'} underline={'none'} to={'/'}>
+                    <ListItemButton sx={{ display: "flex", gap: 2 }}>
+                        <PersonOutlineIcon />
+                        My Account
+                    </ListItemButton>
+                </Link>
 
-                <ListItemButton component="a" href="/" sx={{ display: "flex", gap: 2 }}>
-                    <TextSnippetIcon />
-                    <ListItemText primary="Post snippet" />
-                </ListItemButton>
+                <Link color={'inherit'} underline={'none'} to={'/'}>
+                    <ListItemButton sx={{ display: "flex", gap: 2 }}>
+                        <TextSnippetIcon />
+                        Post snippet
+                    </ListItemButton>
+                </Link>
 
-                <ListItemButton component="a" href="/" sx={{ display: "flex", gap: 2 }}>
-                    <TextSnippetIcon />
-                    <ListItemText primary="My snippet" />
-                </ListItemButton>
+                <Link color={'inherit'} underline={'none'} to={'/'}>
+                    <ListItemButton sx={{ display: "flex", gap: 2 }}>
+                        <TextSnippetIcon />
+                        My snippet
+                    </ListItemButton>
+                </Link>
 
-                <ListItemButton component="a" href="/" sx={{ display: "flex", gap: 2 }}>
-                    <QuestionMarkIcon />
-                    <ListItemText primary="Questions" />
-                </ListItemButton>
+                <Link color={'inherit'} underline={'none'} to={'/'}>
+                    <ListItemButton sx={{ display: "flex", gap: 2 }}>
+                        <QuestionMarkIcon />
+                        Questions
+                    </ListItemButton>
+                </Link>
 
-                <ListItemButton component="a" href="/" sx={{ display: "flex", gap: 2 }}>
-                    <PeopleOutlineIcon />
-                    <ListItemText primary="Users" />
-                </ListItemButton>
+                <Link color={'inherit'} underline={'none'} to={'/'}>
+                    <ListItemButton sx={{ display: "flex", gap: 2 }}>
+                        <PeopleOutlineIcon />
+                        Users
+                    </ListItemButton>
+                </Link>
             </List>
         </Drawer>
     );

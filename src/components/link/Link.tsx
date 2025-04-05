@@ -4,13 +4,14 @@ import { FC, ReactNode } from "react";
 
 interface LinkProps {
     to: string;
-    color?: 'primary' | 'secondary';
     children?: ReactNode;
+    color?: string;
+    underline?: 'none' | 'hover' | 'always';
 }
 
-const Link: FC<LinkProps> = ({ color, to, children }) => {
+const Link: FC<LinkProps> = ({ color, to, children, underline }) => {
     return (
-        <MuiLink component={ReactLink} color={color} to={to}>
+        <MuiLink component={ReactLink} color={color} to={to} underline={underline}>
             {children}
         </MuiLink>
     );

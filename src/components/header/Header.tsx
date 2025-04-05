@@ -2,10 +2,9 @@ import {
     AppBar,
     Toolbar,
     Typography,
-    Button,
-    Link
 } from '@mui/material';
 import { routes } from '../../routes';
+import ButtonLink from "../button-link/ButtonLink.tsx";
 
 const Header = () => {
     return (
@@ -15,7 +14,9 @@ const Header = () => {
                     Codelang
                 </Typography>
 
-                <Button component={Link} color="inherit" href={routes.login}>Login</Button>
+                <ButtonLink to={routes.login}>
+                    Login
+                </ButtonLink>
             </Toolbar>
         </AppBar>
     );
