@@ -1,11 +1,12 @@
 import { Drawer, List, ListItemButton } from "@mui/material";
-import HouseIcon from '@mui/icons-material/House';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import theme from '../../theme';
 import Link from "../link/Link";
+import { routes } from "../../routes.ts";
 
 const SideBar = () => {
     return (
@@ -25,14 +26,14 @@ const SideBar = () => {
             }}
         >
             <List sx={{ display: "flex", flexDirection: "column"}}>
-                <Link color={'inherit'} underline={'none'} to={'/'}>
+                <Link color={'inherit'} underline={'none'} to={routes.home}>
                     <ListItemButton sx={{ display: "flex", gap: 2 }}>
-                        <HouseIcon />
+                        <HomeOutlinedIcon />
                         Home
                     </ListItemButton>
                 </Link>
 
-                <Link color={'inherit'} underline={'none'} to={'/'}>
+                <Link color={'inherit'} underline={'none'} to={routes.account}>
                     <ListItemButton sx={{ display: "flex", gap: 2 }}>
                         <PersonOutlineIcon />
                         My Account
@@ -41,14 +42,14 @@ const SideBar = () => {
 
                 <Link color={'inherit'} underline={'none'} to={'/'}>
                     <ListItemButton sx={{ display: "flex", gap: 2 }}>
-                        <TextSnippetIcon />
+                        <TextSnippetOutlinedIcon />
                         Post snippet
                     </ListItemButton>
                 </Link>
 
                 <Link color={'inherit'} underline={'none'} to={'/'}>
                     <ListItemButton sx={{ display: "flex", gap: 2 }}>
-                        <TextSnippetIcon />
+                        <TextSnippetOutlinedIcon />
                         My snippet
                     </ListItemButton>
                 </Link>
