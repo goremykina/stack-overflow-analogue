@@ -14,3 +14,8 @@ export interface QueryResponseMeta {
     totalPages: number;
     sortBy: string[];
 }
+
+export interface ResponseWithMessage<T> {
+    data: T;
+    message: string;
+}

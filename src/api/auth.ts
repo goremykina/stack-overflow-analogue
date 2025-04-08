@@ -1,14 +1,20 @@
 import { CreateAccountRequest, CreateAccountResponse } from "../models/createAccount.model.ts";
 import { api } from "./api.ts";
 import { LoginRequest } from "../models/login.model.ts";
+import { User } from "../models/user.model.ts";
+import { ResponseWithMessage } from "../models/response.model.ts";
+import useStore from "../store.ts";
 
-export const login = async (data: LoginRequest) => {
-    await api.post('auth/login', { json: data });
+export const login = async (body: LoginRequest) => {
+    const response = await api.post<ResponseWithMessage<User>>('auth/login', { json: body });
+    const { data } = await response.json();
+
+    useStore.setState({ user: data });
 };
 
-export const createAccount = async (data: CreateAccountRequest) => {
-    const response = await api.post<CreateAccountResponse>('register', { json: data });
-    const responseJson = await response.json();
+export const createAccount = async (body: CreateAccountRequest) => {
+    const response = await api.post<CreateAccountResponse>('register', { json: body });
+    const { data } = await response.json();
 
-    return responseJson.data;
+    return data;
 };

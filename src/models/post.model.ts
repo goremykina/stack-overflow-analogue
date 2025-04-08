@@ -14,9 +14,3 @@ export interface Comment {
     id: string;
     content: string;
 }
-
-export interface User {
-    id: string | number,
-    username: string,
-    role: string,
-}

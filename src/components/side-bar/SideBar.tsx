@@ -7,8 +7,11 @@ import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import theme from '../../theme';
 import Link from "../link/Link";
 import { routes } from "../../routes.ts";
+import useAuth from "../../hooks/use-auth";
 
 const SideBar = () => {
+    const { isAuthorized } = useAuth();
+
     return (
         <Drawer
             variant="permanent"
@@ -40,12 +43,14 @@ const SideBar = () => {
                     </ListItemButton>
                 </Link>
 
-                <Link color={'inherit'} underline={'none'} to={'/'}>
-                    <ListItemButton sx={{ display: "flex", gap: 2 }}>
-                        <TextSnippetOutlinedIcon />
-                        Post snippet
-                    </ListItemButton>
-                </Link>
+                {isAuthorized && (
+                    <Link color={'inherit'} underline={'none'} to={'/'}>
+                        <ListItemButton sx={{ display: "flex", gap: 2 }}>
+                            <TextSnippetOutlinedIcon />
+                            Post snippet
+                        </ListItemButton>
+                    </Link>
+                )}
 
                 <Link color={'inherit'} underline={'none'} to={'/'}>
                     <ListItemButton sx={{ display: "flex", gap: 2 }}>
