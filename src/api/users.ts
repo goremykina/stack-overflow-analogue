@@ -1,9 +1,12 @@
 import { api } from './api';
 import { ChangePasswordRequest, ChangePasswordResponse, User, UserStatisticsResponse } from "../models/user.model.ts";
+import { ResponseWithData } from "../models/response.model.ts";
 
 export const getCurrentUser = async () => {
-    const response = await api.get<User>('me');
-    return response.json();
+    const response = await api.get<ResponseWithData<User>>('me');
+    const { data } = await response.json();
+
+    return data;
 };
 
 export const fetchStatistics = async (userId: string) => {
