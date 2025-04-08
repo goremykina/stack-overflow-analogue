@@ -36,42 +36,45 @@ const SideBar = () => {
                     </ListItemButton>
                 </Link>
 
-                <Link color={'inherit'} underline={'none'} to={routes.account}>
-                    <ListItemButton sx={{ display: "flex", gap: 2 }}>
-                        <PersonOutlineIcon />
-                        My Account
-                    </ListItemButton>
-                </Link>
-
                 {isAuthorized && (
-                    <Link color={'inherit'} underline={'none'} to={'/'}>
-                        <ListItemButton sx={{ display: "flex", gap: 2 }}>
-                            <TextSnippetOutlinedIcon />
-                            Post snippet
-                        </ListItemButton>
-                    </Link>
+                    <>
+                        <Link color={'inherit'} underline={'none'} to={routes.account}>
+                            <ListItemButton sx={{ display: "flex", gap: 2 }}>
+                                <PersonOutlineIcon />
+                                My Account
+                            </ListItemButton>
+                        </Link>
+
+                        <Link color={'inherit'} underline={'none'} to={'/'}>
+                            <ListItemButton sx={{ display: "flex", gap: 2 }}>
+                                <TextSnippetOutlinedIcon />
+                                Post snippet
+                            </ListItemButton>
+                        </Link>
+
+                        <Link color={'inherit'} underline={'none'} to={'/'}>
+                            <ListItemButton sx={{ display: "flex", gap: 2 }}>
+                                <TextSnippetOutlinedIcon />
+                                My snippet
+                            </ListItemButton>
+                        </Link>
+
+                        <Link color={'inherit'} underline={'none'} to={'/'}>
+                            <ListItemButton sx={{ display: "flex", gap: 2 }}>
+                                <QuestionMarkIcon />
+                                Questions
+                            </ListItemButton>
+                        </Link>
+
+                        <Link color={'inherit'} underline={'none'} to={'/'}>
+                            <ListItemButton sx={{ display: "flex", gap: 2 }}>
+                                <PeopleOutlineIcon />
+                                Users
+                            </ListItemButton>
+                        </Link>
+                    </>
+
                 )}
-
-                <Link color={'inherit'} underline={'none'} to={'/'}>
-                    <ListItemButton sx={{ display: "flex", gap: 2 }}>
-                        <TextSnippetOutlinedIcon />
-                        My snippet
-                    </ListItemButton>
-                </Link>
-
-                <Link color={'inherit'} underline={'none'} to={'/'}>
-                    <ListItemButton sx={{ display: "flex", gap: 2 }}>
-                        <QuestionMarkIcon />
-                        Questions
-                    </ListItemButton>
-                </Link>
-
-                <Link color={'inherit'} underline={'none'} to={'/'}>
-                    <ListItemButton sx={{ display: "flex", gap: 2 }}>
-                        <PeopleOutlineIcon />
-                        Users
-                    </ListItemButton>
-                </Link>
             </List>
         </Drawer>
     );
