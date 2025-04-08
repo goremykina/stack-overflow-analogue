@@ -4,6 +4,7 @@ import HomePage from "./pages/home/HomePage.tsx";
 import LoginPage from "./pages/login/LoginPage.tsx";
 import { routes } from "./routes.ts";
 import MainLayout from "./layouts/MainLayout.tsx";
+import AccountPage from "./pages/account/AccountPage.tsx";
 
 const router = createBrowserRouter([
     {
@@ -12,6 +13,7 @@ const router = createBrowserRouter([
             { path: routes.home, element: <HomePage /> },
             { path: routes.signUp, element: <SignUpPage /> },
             { path: routes.login, element: <LoginPage /> },
+            { path: routes.account, element: <AccountPage /> }
         ]
     }
 ])
