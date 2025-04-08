@@ -35,7 +35,7 @@ const nameSchema = z.object({
     username: z.string().min(3, 'Name must be at least 3 characters'),
 });
 
-const AccountPage: FC<AccountPageProps> = ({ userName='Alina', id='1', role='user' }) => {
+const AccountPage: FC<AccountPageProps> = ({ userName, id, role }) => {
     const [loading, setLoading] = useState(false);
     const [isShow, setIsShow] = useState(false);
 

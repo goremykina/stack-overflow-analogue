@@ -1,5 +1,10 @@
 import { api } from './api';
-import { ChangePasswordRequest, ChangePasswordResponse, UserStatisticsResponse } from "../models/user.model.ts";
+import { ChangePasswordRequest, ChangePasswordResponse, User, UserStatisticsResponse } from "../models/user.model.ts";
+
+export const getCurrentUser = async () => {
+    const response = await api.get<User>('me');
+    return response.json();
+};
 
 export const fetchStatistics = async (userId: string) => {
     const url = `users/${userId}/statistic`;
