@@ -2,7 +2,7 @@ import ky from "ky";
 import useStore from "../store.ts";
 
 export const api = ky.create({
-    prefixUrl: 'https://codelang.vercel.app/api',
+    prefixUrl: '/api',
     headers: {
         'Content-Type': 'application/json',
     },
