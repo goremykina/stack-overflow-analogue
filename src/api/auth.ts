@@ -18,3 +18,11 @@ export const createAccount = async (body: CreateAccountRequest) => {
 
     return data;
 };
+
+export const logout = async () => {
+    try {
+        await api.post('auth/logout');
+    } finally {
+        useStore.setState({ user: null });
+    }
+};

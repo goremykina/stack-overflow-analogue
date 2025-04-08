@@ -1,11 +1,12 @@
 import {
-    AppBar,
+    AppBar, Button,
     Toolbar,
     Typography,
 } from '@mui/material';
 import { routes } from '../../routes';
 import ButtonLink from "../button-link/ButtonLink.tsx";
 import useAuth from "../../hooks/use-auth.ts";
+import { logout } from "../../api/auth.ts";
 
 const Header = () => {
     const { isAuthorized } = useAuth();
@@ -18,9 +19,9 @@ const Header = () => {
                 </Typography>
 
                 {isAuthorized
-                    ? <ButtonLink to={routes.login}>
+                    ? <Button color={'inherit'} onClick={logout}>
                         Logout
-                    </ButtonLink>
+                    </Button>
                     : <ButtonLink to={routes.login}>
                         Login
                     </ButtonLink>
