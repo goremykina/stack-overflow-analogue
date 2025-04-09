@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { CardContent, Card, Box, IconButton, Typography } from "@mui/material";
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
@@ -7,24 +7,39 @@ import CommentIcon from '@mui/icons-material/Comment';
 import CodeIcon from '@mui/icons-material/Code';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { stackoverflowLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { Post } from "../../models/post.model.ts";
 
 
 interface PostProps {
-    code: string,
-    language: string,
+    post: Post,
 }
 
-const PostCard: FC<PostProps> = ({ code, language }) => {
+const PostCard: FC<PostProps> = ({ post }) => {
+    const { user, language, code, marks } = post;
     const [likesCount, setLikesCount] = useState(0);
     const [dislikesCount, setDislikesCount] = useState(0);
     const [commentCount, setCommentCount] = useState(0);
+
+    useEffect(() => {
+        const { likes, dislikes } = marks.reduce((reducer, mark) => {
+            if (mark.type === 'like') {
+                reducer.likes++;
+            } else if (mark.type === 'dislike') {
+                reducer.dislikes++;
+            }
+
+            return reducer;
+        }, { likes: 0, dislikes: 0 });
+        setLikesCount(likes);
+        setDislikesCount(dislikes);
+    }, [marks]);
 
     return (
         <Card>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '1rem' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
                     <PersonOutlineIcon/>
-                    User
+                    {user.username}
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
                     <CodeIcon />
@@ -49,14 +64,12 @@ const PostCard: FC<PostProps> = ({ code, language }) => {
                     }}>
                         <IconButton
                             sx={{ display: 'flex', gap: 1 }}
-                            onClick={() => setLikesCount(likesCount + 1)}
                         >
                             <Typography>{likesCount}</Typography>
                             <ThumbUpOffAltIcon />
                         </IconButton>
                         <IconButton
                             sx={{ display: 'flex', gap: 1 }}
-                            onClick={() => setDislikesCount(dislikesCount - 1)}
                         >
                             <Typography>{dislikesCount}</Typography>
                             <ThumbDownOffAltIcon />
@@ -65,7 +78,6 @@ const PostCard: FC<PostProps> = ({ code, language }) => {
                     <Box>
                         <IconButton
                             sx={{ display: 'flex', gap: 1 }}
-                            onClick={() => setCommentCount(commentCount +1)}
                         >
                             <Typography>{commentCount}</Typography>
                             <CommentIcon />

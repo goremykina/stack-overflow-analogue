@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { fetchPosts } from "../../api/posts.ts";
 import PostCard from "../../components/post-card/PostCard.tsx";
-import { PostModel } from "../../models/post.model.ts";
+import { Post } from "../../models/post.model.ts";
 import { Box } from "@mui/material";
 
 const HomePage = () => {
-    const [posts, setPosts] = useState<PostModel[]>([]);
+    const [posts, setPosts] = useState<Post[]>([]);
 
     useEffect(() => {
         fetchPosts()
@@ -19,7 +19,7 @@ const HomePage = () => {
             flexDirection: 'column',
             minHeight: 'unset',
         }}>
-            {posts.map(post => (<PostCard language={post.language} code={post.code} />))}
+            {posts.map(post => (<PostCard post={post} />))}
         </Box>
     );
 };

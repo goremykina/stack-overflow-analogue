@@ -1,13 +1,17 @@
-export interface PostModel {
+import { User } from "./user.model.ts";
+
+export interface Post {
     id: string;
     code: string;
     language: string;
+    user: User
     marks: Mark[];
 }
 
 export interface Mark {
     id: string;
     type: string;
+    user: User;
 }
 
 export interface Comment {
