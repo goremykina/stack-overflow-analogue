@@ -36,6 +36,7 @@ const nameSchema = z.object({
 
 const AccountPage: FC = () => {
     const { username, role, id } = useStore(store => store.user) as User;
+    const setUser = useStore(store => store.setUser);
     const [loading, setLoading] = useState(false);
     const [passwordLoading, setPasswordLoading] = useState(false);
     const [isShow, setIsShow] = useState(false);
@@ -84,9 +85,10 @@ const AccountPage: FC = () => {
     const onNameSubmit = async (data: NameSchema) => {
         try {
             setLoading(true);
-            await changeName({
+            const user = await changeName({
                 username: data.username,
             });
+            setUser(user);
         } finally {
             setLoading(false);
         }

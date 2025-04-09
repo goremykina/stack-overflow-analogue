@@ -1,12 +1,12 @@
 import { api } from './api';
 import {
-    ChangeNamedRequest,
+    ChangeNameRequest,
     ChangePasswordRequest,
-    UpdateUserResponse,
+    UpdatePasswordResponseData,
     User,
-    UserStatisticsResponse
+    UserStatisticsResponse, UserWithPassword
 } from "../models/user.model.ts";
-import { ResponseWithData } from "../models/response.model.ts";
+import { ResponseWithData, ResponseWithMessage } from "../models/response.model.ts";
 
 export const getCurrentUser = async () => {
     const response = await api.get<ResponseWithData<User>>('me');
@@ -24,15 +24,13 @@ export const fetchStatistics = async (userId: string) => {
 };
 
 export const changePassword = async (body: ChangePasswordRequest) => {
-    const response = await api.patch<UpdateUserResponse>('me/password', { json: body });
-    const responseData = await response.json();
-
-    return responseData.updatedCount > 0;
+    const response = await api.patch<ResponseWithMessage<UpdatePasswordResponseData>>('me/password', { json: body });
+    await response.json();
 };
 
-export const changeName = async (body: ChangeNamedRequest) => {
-    const response = await api.patch<UpdateUserResponse>('me', { json: body });
-    const responseData = await response.json();
+export const changeName = async (body: ChangeNameRequest) => {
+    const response = await api.patch<ResponseWithMessage<UserWithPassword>>('me', { json: body });
+    const { data } = await response.json();
 
-    return responseData.updatedCount > 0;
+    return data;
 };

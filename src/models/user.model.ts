@@ -4,6 +4,10 @@ export interface User {
     role: string,
 }
 
+export interface UserWithPassword extends User {
+    password: string;
+}
+
 export interface UserStatisticsResponse {
     data: UserStatisticsResponseData;
 }
@@ -31,10 +35,10 @@ export interface ChangePasswordRequest {
     oldPassword: string;
 }
 
-export interface ChangeNamedRequest {
+export interface ChangeNameRequest {
     username: string;
 }
 
-export interface UpdateUserResponse {
+export interface UpdatePasswordResponseData {
     updatedCount: number;
 }
