@@ -10,12 +10,8 @@ import { routes } from '../../routes.ts';
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { changePassword, fetchStatistics } from "../../api/users.ts";
-
-interface AccountPageProps {
-    userName: string,
-    id: string,
-    role: string,
-}
+import useStore from "../../store.ts";
+import { User, UserStatistics } from "../../models/user.model.ts";
 
 const schema = z.object({
     oldPassword: z.string().nonempty(),
@@ -31,13 +27,18 @@ const schema = z.object({
     path: ['passwordConfirmation'],
 });
 
+type Schema = z.infer<typeof schema>;
+type NameSchema = z.infer<typeof nameSchema>;
+
 const nameSchema = z.object({
     username: z.string().min(3, 'Name must be at least 3 characters'),
 });
 
-const AccountPage: FC<AccountPageProps> = ({ userName, id, role }) => {
+const AccountPage: FC = () => {
+    const { username, role, id } = useStore(store => store.user) as User;
     const [loading, setLoading] = useState(false);
     const [isShow, setIsShow] = useState(false);
+    const [statistics, setStatistics] = useState<UserStatistics | null>(null);
 
     const {
         control,
@@ -62,13 +63,12 @@ const AccountPage: FC<AccountPageProps> = ({ userName, id, role }) => {
         },
     });
 
-
     useEffect(() => {
         fetchStatistics(id)
-            .then(response => console.log(response));
+            .then(response => setStatistics(response.statistic));
     }, [id]);
 
-    const onSubmit = async (data: { oldPassword: string, password: string }) => {
+    const onSubmit = async (data: Schema) => {
         try {
             setLoading(true);
             await changePassword({
@@ -78,11 +78,9 @@ const AccountPage: FC<AccountPageProps> = ({ userName, id, role }) => {
         } finally {
             setLoading(false);
         }
-
-        console.log(data)
     };
 
-    const onNameSubmit = (data: { username: string }) => {
+    const onNameSubmit = (data: NameSchema) => {
         console.log('New name:', data.username);
     };
 
@@ -93,7 +91,7 @@ const AccountPage: FC<AccountPageProps> = ({ userName, id, role }) => {
             alignItems: "center",
             gap: '20px',
         }}>
-            <Typography component={'h2'}>Welcome, {userName}</Typography>
+            <Typography component={'h2'}>Welcome, {username}</Typography>
             <Card sx={{
                 width: '100%'
             }}>
@@ -108,8 +106,8 @@ const AccountPage: FC<AccountPageProps> = ({ userName, id, role }) => {
                         height: "150px"
                     }} />
                     <Box>
-                        <Typography component={'h3'}>{userName}</Typography>
-                        <Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', gap: '5px' }}>
+                            <Typography component={'h3'}>{username}</Typography>
                             <Typography component={'p'}>Id: {id}</Typography>
                             <Typography component={'p'}>Role: {role}</Typography>
                         </Box>
@@ -129,139 +127,155 @@ const AccountPage: FC<AccountPageProps> = ({ userName, id, role }) => {
                         </Box>
                     </Box>
                 </Box>
-                <CardContent></CardContent>
+
+                {statistics &&
+                    <CardContent>
+                        <Typography sx={{ fontWeight: '600' }}>SnippetsCount: {statistics.snippetsCount}</Typography>
+                        <Typography sx={{ fontWeight: '600' }}>Rating: {statistics.rating}</Typography>
+                        <Typography sx={{ fontWeight: '600' }}>CommentsCount: {statistics.commentsCount}</Typography>
+                        <Typography sx={{ fontWeight: '600' }}>LikesCount: {statistics.likesCount}</Typography>
+                        <Typography sx={{ fontWeight: '600' }}>DislikesCount: {statistics.dislikesCount}</Typography>
+                        <Typography sx={{ fontWeight: '600' }}>QuestionsCount: {statistics.questionsCount}</Typography>
+                        <Typography sx={{ fontWeight: '600' }}>CorrectAnswersCount: {statistics.correctAnswersCount}</Typography>
+                        <Typography sx={{ fontWeight: '600' }}>RegularAnswersCount: {statistics.regularAnswersCount}</Typography>
+                    </CardContent>
+                }
             </Card>
 
             {isShow &&
                 <Card sx={{
                     width: '100%',
-                    display: 'flex',
                     padding: '24px',
-                    justifyContent: 'space-between',
-                    gap: '20px',
                 }}>
-                    <Box sx={{ width: '100%'}}>
-                        <Typography component={'h2'}>Edit your profile:</Typography>
-                        <Typography component={'h2'}>Change your username:</Typography>
-                        <form onSubmit={handleNameSubmit(onNameSubmit)}>
-                            <Controller
-                                control={nameControl}
-                                name="username"
-                                render={({
-                                    field: { onChange, onBlur, value, name },
-                                    fieldState: { error },
-                                }) => (
-                                    <TextField
-                                        fullWidth
-                                        label="New username"
-                                        variant="outlined"
-                                        margin="normal"
-                                        value={value}
-                                        onChange={onChange}
-                                        onBlur={onBlur}
-                                        name={name}
-                                        error={!!error}
-                                        helperText={error?.message}
-                                    />
-                                )}
-                            />
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                fullWidth sx={{ mt: 2 }}
-                                loading={loading}
-                            >
-                                Save
-                            </Button>
-                        </form>
-                    </Box>
+                    <Typography component={'h2'} sx={{ textDecoration: 'underline' }}>Edit your profile:</Typography>
+                    <Box sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        gap: '20px',
+                    }}>
+                        <Box sx={{ width: '100%'}}>
+                            <Typography component={'h2'} sx={{ fontWeight: '600' }}>Change your username:</Typography>
+                            <form onSubmit={handleNameSubmit(onNameSubmit)}>
+                                <Controller
+                                    control={nameControl}
+                                    name="username"
+                                    render={({
+                                                 field: { onChange, onBlur, value, name },
+                                                 fieldState: { error },
+                                             }) => (
+                                        <TextField
+                                            fullWidth
+                                            label="New username"
+                                            variant="outlined"
+                                            margin="normal"
+                                            value={value}
+                                            onChange={onChange}
+                                            onBlur={onBlur}
+                                            name={name}
+                                            error={!!error}
+                                            helperText={error?.message}
+                                        />
+                                    )}
+                                />
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth sx={{ mt: 2 }}
+                                    loading={loading}
+                                >
+                                    Save
+                                </Button>
+                            </form>
+                        </Box>
 
-                    <Box sx={{ width: '100%'}}>
-                        <Typography component={'h2'}>Change your password:</Typography>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <Controller
-                                control={control}
-                                name="oldPassword"
-                                render={({
-                                    field: { onChange, onBlur, value, name },
-                                    fieldState: { error },
-                                }) => (
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        type="password"
-                                        label="Old password"
-                                        variant="outlined"
-                                        margin="normal"
-                                        value={value}
-                                        onChange={onChange}
-                                        onBlur={onBlur}
-                                        name={name}
-                                        error={!!error}
-                                        helperText={error?.message}
-                                    />
-                                )}
-                            />
+                        <Box sx={{ width: '100%'}}>
+                            <Typography component={'h2'} sx={{ fontWeight: '600' }} >Change your password:</Typography>
+                            <form onSubmit={handleSubmit(onSubmit)}>
+                                <Controller
+                                    control={control}
+                                    name="oldPassword"
+                                    render={({
+                                                 field: { onChange, onBlur, value, name },
+                                                 fieldState: { error },
+                                             }) => (
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            type="password"
+                                            label="Old password"
+                                            variant="outlined"
+                                            margin="normal"
+                                            value={value}
+                                            onChange={onChange}
+                                            onBlur={onBlur}
+                                            name={name}
+                                            error={!!error}
+                                            helperText={error?.message}
+                                        />
+                                    )}
+                                />
 
-                            <Controller
-                                control={control}
-                                name="password"
-                                render={({
-                                    field: { onChange, onBlur, value, name },
-                                    fieldState: { error },
-                                }) => (
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        label="New password"
-                                        type="password"
-                                        variant="outlined"
-                                        margin="normal"
-                                        value={value}
-                                        onChange={onChange}
-                                        onBlur={onBlur}
-                                        name={name}
-                                        error={!!error}
-                                        helperText={error?.message}
-                                    />
-                                )}
-                            />
+                                <Controller
+                                    control={control}
+                                    name="password"
+                                    render={({
+                                                 field: { onChange, onBlur, value, name },
+                                                 fieldState: { error },
+                                             }) => (
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            label="New password"
+                                            type="password"
+                                            variant="outlined"
+                                            margin="normal"
+                                            value={value}
+                                            onChange={onChange}
+                                            onBlur={onBlur}
+                                            name={name}
+                                            error={!!error}
+                                            helperText={error?.message}
+                                        />
+                                    )}
+                                />
 
-                            <Controller
-                                control={control}
-                                name="passwordConfirmation"
-                                render={({
-                                    field: { onChange, onBlur, value, name },
-                                    fieldState: { error },
-                                }) => (
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        label="Confirm password"
-                                        type="password"
-                                        variant="outlined"
-                                        margin="normal"
-                                        value={value}
-                                        onChange={onChange}
-                                        onBlur={onBlur}
-                                        name={name}
-                                        error={!!error}
-                                        helperText={error?.message}
-                                    />
-                                )}
-                            />
+                                <Controller
+                                    control={control}
+                                    name="passwordConfirmation"
+                                    render={({
+                                                 field: { onChange, onBlur, value, name },
+                                                 fieldState: { error },
+                                             }) => (
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            label="Confirm password"
+                                            type="password"
+                                            variant="outlined"
+                                            margin="normal"
+                                            value={value}
+                                            onChange={onChange}
+                                            onBlur={onBlur}
+                                            name={name}
+                                            error={!!error}
+                                            helperText={error?.message}
+                                        />
+                                    )}
+                                />
 
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                fullWidth sx={{ mt: 2 }}
-                                loading={loading}
-                            >
-                                Save
-                            </Button>
-                        </form>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth sx={{ mt: 2 }}
+                                    loading={loading}
+                                >
+                                    Save
+                                </Button>
+                            </form>
+                        </Box>
+
                     </Box>
                 </Card>
             }
