@@ -45,6 +45,7 @@ const AccountPage: FC = () => {
     const {
         control,
         handleSubmit,
+        reset,
     } = useForm({
         resolver: zodResolver(schema),
         defaultValues: {
@@ -58,6 +59,7 @@ const AccountPage: FC = () => {
     const {
         control: nameControl,
         handleSubmit: handleNameSubmit,
+        reset: nameFormReset,
     } = useForm({
         resolver: zodResolver(nameSchema),
         defaultValues: {
@@ -77,6 +79,7 @@ const AccountPage: FC = () => {
                 newPassword: data.password,
                 oldPassword: data.oldPassword,
             });
+            reset();
         } finally {
             setPasswordLoading(false);
         }
@@ -89,6 +92,7 @@ const AccountPage: FC = () => {
                 username: data.username,
             });
             setUser(user);
+            nameFormReset();
         } finally {
             setLoading(false);
         }
