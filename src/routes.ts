@@ -3,4 +3,5 @@ export const routes = Object.freeze({
     login: '/login',
     signUp: '/signup',
     account: '/account',
+    post: '/post',
 });
