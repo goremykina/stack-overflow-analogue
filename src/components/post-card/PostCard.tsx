@@ -11,7 +11,7 @@ interface PostProps {
     language: string,
 }
 
-const Post: FC<PostProps> = ({ code, language }) => {
+const PostCard: FC<PostProps> = ({ code, language }) => {
     const [likesCount, setLikesCount] = useState(0);
     const [dislikesCount, setDislikesCount] = useState(0)
     const [commentCount, setCommentCount] = useState(0)
@@ -82,4 +82,4 @@ const Post: FC<PostProps> = ({ code, language }) => {
     );
 };
 
-export default Post;
+export default PostCard;

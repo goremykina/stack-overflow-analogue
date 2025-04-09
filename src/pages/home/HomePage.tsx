@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchPosts } from "../../api/posts.ts";
-import Post from "../../components/post/Post.tsx";
+import PostCard from "../../components/post-card/PostCard.tsx";
 import { PostModel } from "../../models/post.model.ts";
 import { Box } from "@mui/material";
 
@@ -19,7 +19,7 @@ const HomePage = () => {
             flexDirection: 'column',
             minHeight: 'unset',
         }}>
-            {posts.map(post => (<Post language={post.language} code={post.code} />))}
+            {posts.map(post => (<PostCard language={post.language} code={post.code} />))}
         </Box>
     );
 };
