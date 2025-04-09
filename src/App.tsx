@@ -12,6 +12,7 @@ import useStore from "./store.ts";
 import { Backdrop, CircularProgress } from "@mui/material";
 import HeaderOnlyLayout from "./layouts/HeaderOnlyLayout.tsx";
 import SideBarLayout from "./layouts/SideBarLayout.tsx";
+import UsersPage from "./pages/users/UsersPage.tsx";
 
 const router = createBrowserRouter([
     {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
         children: [
             { path: routes.account, element: <AccountPage /> },
             { path: routes.post, element: <PostPage /> },
+            { path: routes.users, element: <UsersPage /> }
         ]
     },
 

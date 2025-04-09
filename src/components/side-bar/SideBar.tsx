@@ -66,7 +66,7 @@ const SideBar = () => {
                             </ListItemButton>
                         </Link>
 
-                        <Link color={'inherit'} underline={'none'} to={'/'}>
+                        <Link color={'inherit'} underline={'none'} to={routes.users}>
                             <ListItemButton sx={{ display: "flex", gap: 2 }}>
                                 <PeopleOutlineIcon />
                                 Users
