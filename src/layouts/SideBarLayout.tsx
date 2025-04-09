@@ -9,7 +9,7 @@ const SideBarLayout: FC = () => {
         <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
             <Header />
             <CssBaseline />
-            <Box sx={{ display: "flex", flexGrow: 1 }}>
+            <Box sx={{ display: "flex", flexGrow: 1, minHeight: "0" }}>
                 <SideBar />
                 <Box sx={{ flexGrow: 1, padding: 3, overflow: "auto" }}>
                     <Outlet />
