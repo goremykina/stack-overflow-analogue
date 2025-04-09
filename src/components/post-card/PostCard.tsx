@@ -5,6 +5,9 @@ import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import CommentIcon from '@mui/icons-material/Comment';
 import CodeIcon from '@mui/icons-material/Code';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { stackoverflowLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+
 
 interface PostProps {
     code: string,
@@ -13,8 +16,8 @@ interface PostProps {
 
 const PostCard: FC<PostProps> = ({ code, language }) => {
     const [likesCount, setLikesCount] = useState(0);
-    const [dislikesCount, setDislikesCount] = useState(0)
-    const [commentCount, setCommentCount] = useState(0)
+    const [dislikesCount, setDislikesCount] = useState(0);
+    const [commentCount, setCommentCount] = useState(0);
 
     return (
         <Card>
@@ -30,17 +33,9 @@ const PostCard: FC<PostProps> = ({ code, language }) => {
             </Box>
 
             <CardContent>
-                <Box
-                    component="pre"
-                    sx={{
-                        backgroundColor: '#f5f5f5',
-                        padding: 2,
-                        borderRadius: 1,
-                        overflowX: 'scroll'
-                    }}
-                >
+                <SyntaxHighlighter language={language} style={stackoverflowLight} showLineNumbers={true}>
                     {code}
-                </Box>
+                </SyntaxHighlighter>
 
                 <Box
                     sx={{
