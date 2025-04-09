@@ -168,9 +168,9 @@ const AccountPage: FC = () => {
                                     control={nameControl}
                                     name="username"
                                     render={({
-                                                 field: { onChange, onBlur, value, name },
-                                                 fieldState: { error },
-                                             }) => (
+                                        field: { onChange, onBlur, value, name },
+                                        fieldState: { error },
+                                    }) => (
                                         <TextField
                                             fullWidth
                                             label="New username"
@@ -204,9 +204,9 @@ const AccountPage: FC = () => {
                                     control={control}
                                     name="oldPassword"
                                     render={({
-                                                 field: { onChange, onBlur, value, name },
-                                                 fieldState: { error },
-                                             }) => (
+                                        field: { onChange, onBlur, value, name },
+                                        fieldState: { error },
+                                    }) => (
                                         <TextField
                                             required
                                             fullWidth
@@ -228,9 +228,9 @@ const AccountPage: FC = () => {
                                     control={control}
                                     name="password"
                                     render={({
-                                                 field: { onChange, onBlur, value, name },
-                                                 fieldState: { error },
-                                             }) => (
+                                        field: { onChange, onBlur, value, name },
+                                        fieldState: { error },
+                                    }) => (
                                         <TextField
                                             required
                                             fullWidth
@@ -252,9 +252,9 @@ const AccountPage: FC = () => {
                                     control={control}
                                     name="passwordConfirmation"
                                     render={({
-                                                 field: { onChange, onBlur, value, name },
-                                                 fieldState: { error },
-                                             }) => (
+                                        field: { onChange, onBlur, value, name },
+                                        fieldState: { error },
+                                    }) => (
                                         <TextField
                                             required
                                             fullWidth
