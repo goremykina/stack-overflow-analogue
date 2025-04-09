@@ -12,6 +12,7 @@ const schema = z.object({
     email: z.string().email().nonempty(),
     password: z.string().nonempty(),
 });
+type Schema = z.infer<typeof schema>;
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -28,7 +29,8 @@ const LoginPage = () => {
         disabled: loading
     });
 
-    const onSubmit = async (data: { email: string, password: string }) => {
+    
+    const onSubmit = async (data: Schema) => {
         try {
             setLoading(true);
             await login({
