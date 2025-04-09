@@ -31,6 +31,10 @@ export interface ChangePasswordRequest {
     oldPassword: string;
 }
 
-export interface ChangePasswordResponse {
+export interface ChangeNamedRequest {
+    username: string;
+}
+
+export interface UpdateUserResponse {
     updatedCount: number;
 }

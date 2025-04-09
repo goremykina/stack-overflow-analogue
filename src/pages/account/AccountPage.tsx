@@ -9,7 +9,7 @@ import theme from "../../theme.ts";
 import { routes } from '../../routes.ts';
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { changePassword, fetchStatistics } from "../../api/users.ts";
+import { changeName, changePassword, fetchStatistics } from "../../api/users.ts";
 import useStore from "../../store.ts";
 import { User, UserStatistics } from "../../models/user.model.ts";
 
@@ -31,12 +31,13 @@ type Schema = z.infer<typeof schema>;
 type NameSchema = z.infer<typeof nameSchema>;
 
 const nameSchema = z.object({
-    username: z.string().min(3, 'Name must be at least 3 characters'),
+    username: z.string().email(),
 });
 
 const AccountPage: FC = () => {
     const { username, role, id } = useStore(store => store.user) as User;
     const [loading, setLoading] = useState(false);
+    const [passwordLoading, setPasswordLoading] = useState(false);
     const [isShow, setIsShow] = useState(false);
     const [statistics, setStatistics] = useState<UserStatistics | null>(null);
 
@@ -70,18 +71,25 @@ const AccountPage: FC = () => {
 
     const onSubmit = async (data: Schema) => {
         try {
-            setLoading(true);
+            setPasswordLoading(true);
             await changePassword({
                 newPassword: data.password,
                 oldPassword: data.oldPassword,
             });
         } finally {
-            setLoading(false);
+            setPasswordLoading(false);
         }
     };
 
-    const onNameSubmit = (data: NameSchema) => {
-        console.log('New name:', data.username);
+    const onNameSubmit = async (data: NameSchema) => {
+        try {
+            setLoading(true);
+            await changeName({
+                username: data.username,
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -269,7 +277,7 @@ const AccountPage: FC = () => {
                                     variant="contained"
                                     color="primary"
                                     fullWidth sx={{ mt: 2 }}
-                                    loading={loading}
+                                    loading={passwordLoading}
                                 >
                                     Save
                                 </Button>
