@@ -15,10 +15,9 @@ interface PostProps {
 }
 
 const PostCard: FC<PostProps> = ({ post }) => {
-    const { user, language, code, marks } = post;
+    const { user, language, code, marks, comments } = post;
     const [likesCount, setLikesCount] = useState(0);
     const [dislikesCount, setDislikesCount] = useState(0);
-    const [commentCount, setCommentCount] = useState(0);
 
     useEffect(() => {
         const { likes, dislikes } = marks.reduce((reducer, mark) => {
@@ -79,7 +78,7 @@ const PostCard: FC<PostProps> = ({ post }) => {
                         <IconButton
                             sx={{ display: 'flex', gap: 1 }}
                         >
-                            <Typography>{commentCount}</Typography>
+                            <Typography>{comments.length}</Typography>
                             <CommentIcon />
                         </IconButton>
                     </Box>

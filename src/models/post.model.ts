@@ -6,6 +6,7 @@ export interface Post {
     language: string;
     user: User
     marks: Mark[];
+    comments: Comment[];
 }
 
 export interface Mark {
