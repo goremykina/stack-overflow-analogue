@@ -14,15 +14,13 @@ const HomePage = () => {
         const fetchDataPosts = async () => {
             setLoading(true)
             try {
-                await fetchPosts(currentPage)
-                    .then(response => {
-                        setPosts(response.data);
-                        setTotalPages(response.meta.totalPages);});
+                const response = await fetchPosts(currentPage)
+                setPosts(response.data)
+                setTotalPages(response.meta.totalPages)
             } finally {
                 setLoading(false);
             }
         }
-
         fetchDataPosts();
     }, [currentPage]);
 
