@@ -2,19 +2,28 @@ import { useEffect, useState } from "react";
 import { fetchPosts } from "../../api/posts.ts";
 import PostCard from "../../components/post-card/PostCard.tsx";
 import { Post } from "../../models/post.model.ts";
-import { Box, Pagination, Typography } from "@mui/material";
+import { Box, CircularProgress, Pagination, Typography } from "@mui/material";
 
 const HomePage = () => {
     const [posts, setPosts] = useState<Post[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchPosts(currentPage)
-            .then(response => {
-                setPosts(response.data);
-                setTotalPages(response.meta.totalPages);
-            });
+        const fetchDataPosts = async () => {
+            setLoading(true)
+            try {
+                await fetchPosts(currentPage)
+                    .then(response => {
+                        setPosts(response.data);
+                        setTotalPages(response.meta.totalPages);});
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchDataPosts();
     }, [currentPage]);
 
     return (
@@ -33,15 +42,29 @@ const HomePage = () => {
                     onChange={(_event, page) => setCurrentPage(page)}
                 />
             </Box>
-            <Box sx={{
-                display: 'flex',
-                gap: '1rem',
-                flexDirection: 'column',
-            }}>
-                {posts.map(post => (
-                    <PostCard post={post} />
-                ))}
-            </Box>
+
+            {loading
+                ? <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '60vh'
+                    }}
+                >
+                    <CircularProgress size={60} />
+                </Box>
+                : <Box
+                    sx={{
+                        display: 'flex',
+                        gap: '1rem',
+                        flexDirection: 'column',
+                    }}>
+                        {posts.map(post => (
+                            <PostCard post={post} />
+                        ))}
+                </Box>
+            }
         </Box>
     );
 };
