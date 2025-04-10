@@ -6,7 +6,7 @@ import {
     User,
     UserStatisticsResponse, UserWithPassword
 } from "../models/user.model.ts";
-import { ResponseWithData, ResponseWithMessage } from "../models/response.model.ts";
+import { QueryResponse, ResponseWithData, ResponseWithMessage } from "../models/response.model.ts";
 
 export const getCurrentUser = async () => {
     const response = await api.get<ResponseWithData<User>>('me');
@@ -34,3 +34,9 @@ export const changeName = async (body: ChangeNameRequest) => {
 
     return data;
 };
+
+export const getAllUsers = async (page: number = 1) => {
+    const response = await api.get<QueryResponse<User[]>>('users', { searchParams: { page }});
+    const { data } = await response.json();
+
+    return data;};
