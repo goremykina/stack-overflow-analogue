@@ -59,7 +59,7 @@ const SideBar = () => {
                             </ListItemButton>
                         </Link>
 
-                        <Link color={'inherit'} underline={'none'} to={'/'}>
+                        <Link color={'inherit'} underline={'none'} to={routes.questions}>
                             <ListItemButton sx={{ display: "flex", gap: 2 }}>
                                 <QuestionMarkIcon />
                                 Questions
