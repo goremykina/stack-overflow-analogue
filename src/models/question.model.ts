@@ -15,3 +15,10 @@ export interface Answers {
     content: string;
     isCorrect: boolean;
 }
+
+export interface CreateQuestionResponse {
+    title: string,
+    description: string,
+    attachedCode: string
+
+}

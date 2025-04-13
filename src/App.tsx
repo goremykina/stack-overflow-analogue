@@ -14,6 +14,7 @@ import HeaderOnlyLayout from "./layouts/HeaderOnlyLayout.tsx";
 import SideBarLayout from "./layouts/SideBarLayout.tsx";
 import UsersPage from "./pages/users/UsersPage.tsx";
 import QuestionsPage from "./pages/questions/QuestionsPage.tsx";
+import EditQuestionPage from "./pages/edit-question/EditQuestionPage.tsx";
 
 const router = createBrowserRouter([
     {
@@ -35,7 +36,8 @@ const router = createBrowserRouter([
             { path: routes.account, element: <AccountPage /> },
             { path: routes.post, element: <PostPage /> },
             { path: routes.users, element: <UsersPage /> },
-            { path: routes.questions, element: <QuestionsPage /> }
+            { path: routes.questions, element: <QuestionsPage /> },
+            { path: routes.createQuestion, element: <EditQuestionPage /> }
         ]
     },
 

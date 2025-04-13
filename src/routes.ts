@@ -6,4 +6,5 @@ export const routes = Object.freeze({
     post: '/post',
     users: '/users',
     questions: '/questions',
+    createQuestion: '/create-question',
 });

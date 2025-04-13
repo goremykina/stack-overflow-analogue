@@ -1,5 +1,5 @@
 import {
-    AppBar, Button,
+    AppBar, Box, Button,
     Toolbar,
     Typography,
 } from '@mui/material';
@@ -19,9 +19,15 @@ const Header = () => {
                 </Typography>
 
                 {isAuthorized
-                    ? <Button color={'inherit'} onClick={logout}>
-                        Logout
-                    </Button>
+                    ? <Box>
+                        <ButtonLink to={routes.createQuestion}>
+                            Ask question
+                        </ButtonLink>
+                        <Button color={'inherit'} onClick={logout}>
+                            Logout
+                        </Button>
+                    </Box>
+
                     : <ButtonLink to={routes.login}>
                         Login
                     </ButtonLink>
