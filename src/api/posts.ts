@@ -1,16 +1,18 @@
 import { api } from './api';
 import { CreatePost, Post } from "../models/post.model.ts";
 import { QueryResponse } from "../models/response.model.ts";
+import { SearchParamsOption } from "ky";
 
-export const fetchPosts = async (page: number = 1) => {
-    const response = await api.get<QueryResponse<Post[]>>('snippets', { searchParams: { page } });
-    const { data } = await response.json();
+export const fetchPosts = async (page: number = 1, userId: string | null = null) => {
+    const searchParams:  SearchParamsOption = {
+        page
+    };
 
-    return data;
-};
+    if (userId) {
+        searchParams.userId = userId;
+    }
 
-export const fetchPostsUser = async (page: number = 1, id: string) => {
-    const response = await api.get<QueryResponse<Post[]>>(`snippets/${id}`, { searchParams: { page } });
+    const response = await api.get<QueryResponse<Post[]>>('snippets', { searchParams });
     const { data } = await response.json();
 
     return data;
