@@ -1,63 +1,124 @@
-import {  useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Box,
     Button,
     MenuItem,
     Select,
-    SelectChangeEvent, TextareaAutosize,
     Typography
 } from "@mui/material";
-import theme from "../../theme";
+import { createPost, fetchPosts } from "../../api/posts.ts";
+import { Controller, useForm } from "react-hook-form";
+import Editor from "react-simple-code-editor";
+import { highlight, languages } from "prismjs";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+const schema = z.object({
+    language: z.string().nonempty(),
+    attachedCode: z.string().nonempty(),
+});
+type Schema = z.infer<typeof schema>;
 
 const PostPage = () => {
-    const [language, setLanguage] = useState('');
+    const [language, setLanguage] = useState<[]>([]);
 
-    const handleChange = (event: SelectChangeEvent) => {
-        setLanguage(event.target.value);
+    const [loading, setLoading] = useState(false);
+    const { handleSubmit, control, reset } = useForm({
+        resolver: zodResolver(schema),
+        defaultValues: {
+            attachedCode: '',
+            language: '',
+        },
+        disabled: loading
+    });
+
+    useEffect(() => {
+        const getPostsLanguage = async () => {
+            const languagesSet = new Set()
+            const response = await fetchPosts()
+            response.data.map((post) => {
+                languagesSet.add(post.language);
+                setLanguage(languagesSet)
+            })
+        }
+        getPostsLanguage();
+    }, [])
+
+    const handleQuestion = async (data: Schema) => {
+        try {
+            setLoading(true);
+            await createPost({
+                language: data.language,
+                code: data.attachedCode,
+            });
+            reset();
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-            <Typography
-                sx={{ textAlign: 'center', fontSize: '2rem' }}
-                component={'h1'}
-            >
+            <Typography sx={{ textAlign: 'center', fontSize: '2rem' }}>
                 Create new snippet!
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                <Typography sx={{ fontSize: '1.2rem', fontWeight: '600' }} component={'h3'}>Language of your snippet:</Typography>
-                <Select
-                    value={language}
-                    onChange={handleChange}
-                >
-                    <MenuItem value={'Python'}>Python</MenuItem>
-                    <MenuItem value={'JavaScript'}>JavaScript</MenuItem>
-                    <MenuItem value={'Java'}>Java</MenuItem>
-                </Select>
-            </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-                <Typography
-                    sx={{ fontSize: '1.2rem', fontWeight: '600' }}
-                    component={'h3'}
-                >
-                    Code of your snippet:
-                </Typography>
-                    <TextareaAutosize
-                        value={'let a = 123;'}
-                    >
-                    </TextareaAutosize>
+
+            <form onSubmit={handleSubmit(handleQuestion)} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                <Typography sx={{ fontSize: '1.1rem', fontWeight: '600' }} component={'h3'}>Language of your snippet:</Typography>
+                <Controller
+                    control={control}
+                    name="language"
+                    render={({
+                        field: { onChange, onBlur, value, name },
+                    }) => (
+
+                        <Select
+                            name={name}
+                            value={value}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                        >
+                            {[...language].map((lang, index) => (
+                                <MenuItem value={lang} key={index}>{lang}</MenuItem>
+                            ))}
+                        </Select>
+                    )}
+                />
+
+                <Typography sx={{ fontSize: '1.1rem', fontWeight: '600' }}>Code of your snippet:</Typography>
+
+                <Controller
+                    control={control}
+                    name="attachedCode"
+                    render={({
+                        field: { onChange, onBlur, value, name },
+                    }) => (
+                        <Editor
+                            name={name}
+                            value={value}
+                            onValueChange={onChange}
+                            onBlur={onBlur}
+                            highlight={(code) => highlight(code, languages.javascript, 'javascript')}
+                            padding={10}
+                            style={{
+                                minHeight: '200px',
+                                backgroundColor: "#f5f5f5",
+                                overflow: 'auto'
+                            }}
+                        />
+                    )}
+                />
+
                 <Button
-                    sx={{
-                        borderRadius: 1,
-                        border: `1px solid ${theme.palette.primary.main}`,
-                        backgroundColor: theme.palette.primary.main,
-                        color: 'black',
-                        fontSize: '1rem',
-                        boxShadow: 'rgba(0, 0, 0, 0.35) 0px 3px 10px',
-                    }}
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    fullWidth sx={{ mt: 2 }}
+                    loading={loading}
                 >
-                    CREATE SNIPPET</Button>
-            </Box>
+                    CREATE SNIPPET
+                </Button>
+            </form>
         </Box>
     );
 };

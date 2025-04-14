@@ -19,3 +19,8 @@ export interface Comment {
     id: string;
     content: string;
 }
+
+export interface CreatePost  {
+    code: string;
+    language: string;
+}
