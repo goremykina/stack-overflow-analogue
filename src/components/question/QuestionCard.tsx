@@ -1,16 +1,20 @@
 import { Box, Card, CardContent, IconButton, Typography } from "@mui/material";
 import { Question } from "../../models/question.model.ts";
-import { FC } from "react";
+import { FC, useState } from "react";
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { stackoverflowLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import language from "react-syntax-highlighter/dist/cjs/languages/hljs/c";
 
 interface UserProps {
     question: Question,
     username: string,
 }
 
-const QuestionCard: FC<UserProps> = ({ question, username }) => {
-    const { title,  description} = question;
+const QuestionCard: FC<UserProps> = ({ question, username}) => {
+    const { title,  description, attachedCode} = question;
+    const [isShow, setIsShow] = useState(false)
 
     return (
         <Card >
@@ -25,9 +29,10 @@ const QuestionCard: FC<UserProps> = ({ question, username }) => {
                             <Typography>Asked by user: {username}</Typography>
                         </Box>
                     </Box>
-                    <IconButton>
+                    <IconButton onClick={() => setIsShow(true)}>
                         <ExpandMoreIcon sx={{
                             transition: 'transform 0.3s ease',
+                            transform: `rotate(${isShow ? '180' : '0'}deg)`
                         }} />
                     </IconButton>
                 </Box>
@@ -35,6 +40,13 @@ const QuestionCard: FC<UserProps> = ({ question, username }) => {
                 <Box>
                     {description}
                 </Box>
+
+                {isShow &&
+                    <SyntaxHighlighter language={language} style={stackoverflowLight} showLineNumbers={true}>
+                        {attachedCode}
+                    </SyntaxHighlighter>
+                }
+
             </CardContent>
         </Card>
     );
