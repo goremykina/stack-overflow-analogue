@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
     Box,
     Button,
@@ -6,7 +6,7 @@ import {
     Select,
     Typography
 } from "@mui/material";
-import { createPost, fetchPosts } from "../../api/posts.ts";
+import { createPost } from "../../api/posts.ts";
 import { Controller, useForm } from "react-hook-form";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs";
@@ -19,9 +19,9 @@ const schema = z.object({
 });
 type Schema = z.infer<typeof schema>;
 
-const PostPage = () => {
-    const [language, setLanguage] = useState<[]>([]);
+const availableLanguages = ["C#", "Go", "C/C++", "JavaScript", "Java", "Python", "Ruby", "Kotlin"];
 
+const PostPage = () => {
     const [loading, setLoading] = useState(false);
     const { handleSubmit, control, reset } = useForm({
         resolver: zodResolver(schema),
@@ -31,18 +31,6 @@ const PostPage = () => {
         },
         disabled: loading
     });
-
-    useEffect(() => {
-        const getPostsLanguage = async () => {
-            const languagesSet = new Set()
-            const response = await fetchPosts()
-            response.data.map((post) => {
-                languagesSet.add(post.language);
-                setLanguage(languagesSet)
-            })
-        }
-        getPostsLanguage();
-    }, [])
 
     const handleQuestion = async (data: Schema) => {
         try {
@@ -78,7 +66,7 @@ const PostPage = () => {
                             onChange={onChange}
                             onBlur={onBlur}
                         >
-                            {[...language].map((lang, index) => (
+                            {availableLanguages.map((lang, index) => (
                                 <MenuItem value={lang} key={index}>{lang}</MenuItem>
                             ))}
                         </Select>
