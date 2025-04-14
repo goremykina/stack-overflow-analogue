@@ -58,8 +58,8 @@ const HomePage = () => {
                         gap: '1rem',
                         flexDirection: 'column',
                     }}>
-                        {posts.map(post => (
-                            <PostCard post={post} />
+                        {posts.map((post, index) => (
+                            <PostCard post={post} key={index}/>
                         ))}
                 </Box>
             }

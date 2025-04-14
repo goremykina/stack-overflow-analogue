@@ -59,8 +59,8 @@ const QuestionsPage = () => {
                         gap: '1rem',
                         flexDirection: 'column',
                     }}>
-                    {questions.map(question => (
-                        <QuestionCard question={question} username={question.user.username} />
+                    {questions.map((question, index) => (
+                        <QuestionCard key={index} question={question} username={question.user.username}/>
                     ))}
                 </Box>
             }

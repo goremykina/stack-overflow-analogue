@@ -58,8 +58,8 @@ const UsersPage = () => {
                         gap: '1rem',
                         flexDirection: 'column',
                     }}>
-                    {users.map(user => (
-                        <UserCard user={user} />
+                    {users.map((user, index) => (
+                        <UserCard user={user} key={index}/>
                     ))}
                 </Box>
             }
