@@ -8,7 +8,9 @@ import CodeIcon from '@mui/icons-material/Code';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { stackoverflowLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { Post } from "../../models/post.model.ts";
-
+import { addMarks, getPost } from "../../api/posts.ts";
+import useStore from "../../store.ts";
+import theme from "../../theme.ts";
 
 interface PostProps {
     post: Post,
@@ -18,20 +20,70 @@ const PostCard: FC<PostProps> = ({ post }) => {
     const { user, language, code, marks, comments } = post;
     const [likesCount, setLikesCount] = useState(0);
     const [dislikesCount, setDislikesCount] = useState(0);
+    const [isLike, setIsLike] = useState(false)
+    const [isDislike, setIsDislike] = useState(false)
+
+    const currentUserId = useStore(store => store.user?.id);
 
     useEffect(() => {
         const { likes, dislikes } = marks.reduce((reducer, mark) => {
             if (mark.type === 'like') {
                 reducer.likes++;
+
+                if (mark.user.id === currentUserId) {
+                    setIsLike(true)
+                }
+
             } else if (mark.type === 'dislike') {
                 reducer.dislikes++;
+
+                if (mark.user.id === currentUserId) {
+                    setIsDislike(true)
+                }
             }
 
             return reducer;
         }, { likes: 0, dislikes: 0 });
         setLikesCount(likes);
         setDislikesCount(dislikes);
-    }, [marks]);
+    }, [currentUserId, marks]);
+
+    const addLikes = async() => {
+        if (isLike) {
+            return;
+        }
+
+        setLikesCount((prev) => prev + 1);
+        if (isDislike) {
+            setIsDislike(false)
+            setDislikesCount(prev => prev - 1)
+        }
+
+        setIsLike(true)
+
+        await addMarks({
+            mark: "like"
+        }, post.id)
+    }
+
+    const addDislikes = async() => {
+        if (isDislike) {
+            return;
+        }
+
+        setDislikesCount((prev) => prev + 1);
+
+        if (isLike) {
+            setIsLike(false)
+            setLikesCount(prev => prev - 1)
+        }
+
+        setIsDislike(true)
+
+        await addMarks({
+            mark: "dislike",
+        }, post.id)
+    }
 
     return (
         <Card>
@@ -61,17 +113,17 @@ const PostCard: FC<PostProps> = ({ post }) => {
                     <Box sx={{
                         display: 'flex'
                     }}>
-                        <IconButton
-                            sx={{ display: 'flex', gap: 1 }}
+                        <IconButton onClick={addLikes}
+                            sx={{ display: 'flex', gap: 1,  }}
                         >
                             <Typography>{likesCount}</Typography>
-                            <ThumbUpOffAltIcon />
+                            <ThumbUpOffAltIcon sx={{ color: isLike ? `${theme.palette.secondary.contrastText}` : '' }} />
                         </IconButton>
-                        <IconButton
+                        <IconButton onClick={addDislikes}
                             sx={{ display: 'flex', gap: 1 }}
                         >
                             <Typography>{dislikesCount}</Typography>
-                            <ThumbDownOffAltIcon />
+                            <ThumbDownOffAltIcon sx={{ color: isDislike ? `${theme.palette.secondary.light}` : '' }}/>
                         </IconButton>
                     </Box>
                     <Box>

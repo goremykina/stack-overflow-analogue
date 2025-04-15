@@ -24,3 +24,7 @@ export interface CreatePost  {
     code: string;
     language: string;
 }
+
+export interface MarkRequest {
+    mark: string
+}
