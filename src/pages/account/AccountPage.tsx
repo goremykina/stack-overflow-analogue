@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, IconButton, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CircularProgress, IconButton, TextField, Typography } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -68,8 +68,16 @@ const AccountPage: FC = () => {
     });
 
     useEffect(() => {
-        fetchStatistics(id)
-            .then(response => setStatistics(response.statistic));
+        const getStatistics = async () => {
+            setLoading(true)
+            try {
+                const response = await fetchStatistics(id)
+                setStatistics(response.statistic)
+            } finally {
+                setLoading(false)
+            }
+        }
+        getStatistics()
     }, [id]);
 
     const onSubmit = async (data: Schema) => {
@@ -142,6 +150,19 @@ const AccountPage: FC = () => {
                     </Box>
                 </Box>
 
+                {loading &&
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '35px',
+                            margin: '30px'
+                        }}
+                    >
+                        <CircularProgress size={35} />
+                    </Box>
+                }
                 {statistics &&
                     <CardContent>
                         <Typography sx={{ fontWeight: '600' }}>SnippetsCount: {statistics.snippetsCount}</Typography>
