@@ -8,9 +8,10 @@ import CodeIcon from '@mui/icons-material/Code';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { stackoverflowLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { Post } from "../../models/post.model.ts";
-import { addMarks, getPost } from "../../api/posts.ts";
+import { addMarks } from "../../api/posts.ts";
 import useStore from "../../store.ts";
 import theme from "../../theme.ts";
+import CommentCard from "../comment-card/CommentCard.tsx";
 
 interface PostProps {
     post: Post,
@@ -22,8 +23,8 @@ const PostCard: FC<PostProps> = ({ post }) => {
     const [dislikesCount, setDislikesCount] = useState(0);
     const [isLike, setIsLike] = useState(false)
     const [isDislike, setIsDislike] = useState(false)
-
     const currentUserId = useStore(store => store.user?.id);
+    const [isShownComments, setIsShownComments] = useState(false)
 
     useEffect(() => {
         const { likes, dislikes } = marks.reduce((reducer, mark) => {
@@ -127,7 +128,7 @@ const PostCard: FC<PostProps> = ({ post }) => {
                         </IconButton>
                     </Box>
                     <Box>
-                        <IconButton
+                        <IconButton onClick={() => setIsShownComments(!isShownComments)}
                             sx={{ display: 'flex', gap: 1 }}
                         >
                             <Typography>{comments.length}</Typography>
@@ -135,6 +136,21 @@ const PostCard: FC<PostProps> = ({ post }) => {
                         </IconButton>
                     </Box>
                 </Box>
+
+                <Box>
+                    {isShownComments &&
+                        <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            {comments.map((comment, index) => (
+                                <CommentCard key={index}>{comment.content}</CommentCard>
+                            ))}
+                        </CardContent>
+                    }
+
+                    {(isShownComments && comments.length === 0) &&
+                        <Typography sx={{textAlign: 'center', fontSize: '1.15rem' }}>There are no comments yet</Typography>
+                    }
+                </Box>
+
             </CardContent>
         </Card>
     );
