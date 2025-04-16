@@ -1,6 +1,6 @@
 import { api } from './api';
 import { CreatePost, MarkRequest, Post } from "../models/post.model.ts";
-import { QueryResponse } from "../models/response.model.ts";
+import { QueryResponse, ResponseWithData } from "../models/response.model.ts";
 import { SearchParamsOption } from "ky";
 
 export const fetchPosts = async (page: number = 1, userId: string | null = null) => {
@@ -22,8 +22,14 @@ export const createPost = async (body: CreatePost) => {
     await api.post('snippets', { json: body });
 };
 
-export const getPost = async (id: string) => {
-    const response = await api.get<QueryResponse<Post>>('snippets', { searchParams: { id }});
+export const editPost = async (body: CreatePost, id: string) => {
+    const response = await api.patch(`snippets/${id}`, { json: body });
+
+    return response.json();
+}
+
+export const fetchPost = async (id: string) => {
+    const response = await api.get<ResponseWithData<Post>>(`snippets/${id}`);
     const { data } = await response.json();
 
     return data;

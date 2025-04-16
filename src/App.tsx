@@ -5,7 +5,7 @@ import LoginPage from "./pages/login/LoginPage.tsx";
 import { routes } from "./routes.ts";
 import ProtectedSideBarLayout from "./layouts/ProtectedSideBarLayout.tsx";
 import AccountPage from "./pages/account/AccountPage.tsx";
-import PostPage from "./pages/post/PostPage.tsx";
+import EditPostPage from "./pages/edit-post/EditPostPage.tsx";
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "./api/users.ts";
 import useStore from "./store.ts";
@@ -35,7 +35,8 @@ const router = createBrowserRouter([
         Component: ProtectedSideBarLayout,
         children: [
             { path: routes.account, element: <AccountPage /> },
-            { path: routes.post, element: <PostPage /> },
+            { path: routes.createPost, element: <EditPostPage /> },
+            { path: routes.editPost, element: <EditPostPage /> },
             { path: routes.users, element: <UsersPage /> },
             { path: routes.questions, element: <QuestionsPage /> },
             { path: routes.createQuestion, element: <EditQuestionPage /> },

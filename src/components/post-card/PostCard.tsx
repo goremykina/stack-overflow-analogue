@@ -12,6 +12,8 @@ import { addMarks } from "../../api/posts.ts";
 import useStore from "../../store.ts";
 import theme from "../../theme.ts";
 import CommentCard from "../comment-card/CommentCard.tsx";
+import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
+import Link from '../link/Link.tsx'
 
 interface PostProps {
     post: Post,
@@ -88,7 +90,7 @@ const PostCard: FC<PostProps> = ({ post }) => {
 
     return (
         <Card>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '1rem' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '.7rem' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
                     <PersonOutlineIcon/>
                     {user.username}
@@ -98,8 +100,16 @@ const PostCard: FC<PostProps> = ({ post }) => {
                     {language}
                 </Box>
             </Box>
+            <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
 
-            <CardContent>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    {currentUserId === user.id &&
+                        <Link color={'inherit'} underline={'none'} to={`/edit-post/${post.id}`}>
+                            <ModeEditOutlineOutlinedIcon/>
+                        </Link>
+                    }
+                </Box>
+
                 <SyntaxHighlighter language={language} style={stackoverflowLight} showLineNumbers={true}>
                     {code}
                 </SyntaxHighlighter>
@@ -114,13 +124,15 @@ const PostCard: FC<PostProps> = ({ post }) => {
                     <Box sx={{
                         display: 'flex'
                     }}>
-                        <IconButton onClick={addLikes}
+                        <IconButton
+                            onClick={addLikes}
                             sx={{ display: 'flex', gap: 1,  }}
                         >
                             <Typography>{likesCount}</Typography>
                             <ThumbUpOffAltIcon sx={{ color: isLike ? `${theme.palette.secondary.contrastText}` : '' }} />
                         </IconButton>
-                        <IconButton onClick={addDislikes}
+                        <IconButton
+                            onClick={addDislikes}
                             sx={{ display: 'flex', gap: 1 }}
                         >
                             <Typography>{dislikesCount}</Typography>
@@ -128,7 +140,8 @@ const PostCard: FC<PostProps> = ({ post }) => {
                         </IconButton>
                     </Box>
                     <Box>
-                        <IconButton onClick={() => setIsShownComments(!isShownComments)}
+                        <IconButton
+                            onClick={() => setIsShownComments(!isShownComments)}
                             sx={{ display: 'flex', gap: 1 }}
                         >
                             <Typography>{comments.length}</Typography>

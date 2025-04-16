@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Box,
     Button,
@@ -6,12 +6,14 @@ import {
     Select,
     Typography
 } from "@mui/material";
-import { createPost } from "../../api/posts.ts";
+import { createPost, editPost, fetchPost } from "../../api/posts.ts";
 import { Controller, useForm } from "react-hook-form";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useNavigate, useParams } from "react-router-dom";
+import { routes } from "../../routes.ts";
 
 const schema = z.object({
     language: z.string().nonempty(),
@@ -21,7 +23,11 @@ type Schema = z.infer<typeof schema>;
 
 const availableLanguages = ["C#", "Go", "C/C++", "JavaScript", "Java", "Python", "Ruby", "Kotlin"];
 
-const PostPage = () => {
+const EditPostPage = () => {
+    const { postId } = useParams<{ postId: string }>();
+    const navigate = useNavigate();
+    const [editMode, setEditMode] = useState(!!postId);
+
     const [loading, setLoading] = useState(false);
     const { handleSubmit, control, reset } = useForm({
         resolver: zodResolver(schema),
@@ -32,14 +38,48 @@ const PostPage = () => {
         disabled: loading
     });
 
-    const handleQuestion = async (data: Schema) => {
-        try {
-            setLoading(true);
-            await createPost({
-                language: data.language,
-                code: data.attachedCode,
+
+    useEffect(() => {
+        const newEditMode = !!postId;
+        setEditMode(newEditMode);
+
+        if (!newEditMode) {
+            reset({
+                attachedCode: '',
+                language: '',
             });
-            reset();
+        }
+
+        if (postId) {
+            setLoading(true);
+            fetchPost(postId)
+                .then(post => {
+                    reset({
+                        attachedCode: post.code,
+                        language: post.language,
+                    });
+                })
+                .finally(() => setLoading(false));
+        }
+    }, [postId])
+
+    const handleQuestion = async (data: Schema) => {
+        setLoading(true);
+
+        try {
+            if (editMode) {
+                await editPost({
+                    language: data.language,
+                    code: data.attachedCode,
+                }, postId!);
+            } else {
+                await createPost({
+                    language: data.language,
+                    code: data.attachedCode,
+                });
+            }
+
+            navigate(routes.userPosts);
         } finally {
             setLoading(false);
         }
@@ -48,7 +88,11 @@ const PostPage = () => {
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
             <Typography sx={{ textAlign: 'center', fontSize: '2rem' }}>
-                Create new snippet!
+                {!editMode
+                    ? 'Create new snippet!'
+                    : 'Change snippet'
+                }
+
             </Typography>
 
             <form onSubmit={handleSubmit(handleQuestion)} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -104,11 +148,14 @@ const PostPage = () => {
                     fullWidth sx={{ mt: 2 }}
                     loading={loading}
                 >
-                    CREATE SNIPPET
+                    {!editMode
+                        ? 'CREATE SNIPPET'
+                        : 'EDIT SNIPPET'
+                    }
                 </Button>
             </form>
         </Box>
     );
 };
 
-export default PostPage;
+export default EditPostPage;
