@@ -29,7 +29,7 @@ const QuestionCard: FC<UserProps> = ({ question, username}) => {
                             <Typography>Asked by user: {username}</Typography>
                         </Box>
                     </Box>
-                    <IconButton onClick={() => setIsShow(true)}>
+                    <IconButton onClick={() => setIsShow(!isShow)}>
                         <ExpandMoreIcon sx={{
                             transition: 'transform 0.3s ease',
                             transform: `rotate(${isShow ? '180' : '0'}deg)`
