@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import { CardContent, Card, Box, IconButton, Typography } from "@mui/material";
+import { CardContent, Card, Box, IconButton, Typography, TextField, Button } from "@mui/material";
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import CommentIcon from '@mui/icons-material/Comment';
@@ -14,19 +14,41 @@ import theme from "../../theme.ts";
 import CommentCard from "../comment-card/CommentCard.tsx";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import Link from '../link/Link.tsx'
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { addComment } from "../../api/comments.ts";
 
 interface PostProps {
     post: Post,
 }
 
+const schema = z.object({
+    comment: z.string().nonempty(),
+});
+type Schema = z.infer<typeof schema>;
+
 const PostCard: FC<PostProps> = ({ post }) => {
     const { user, language, code, marks, comments } = post;
+    console.log(comments)
     const [likesCount, setLikesCount] = useState(0);
     const [dislikesCount, setDislikesCount] = useState(0);
     const [isLike, setIsLike] = useState(false)
     const [isDislike, setIsDislike] = useState(false)
     const currentUserId = useStore(store => store.user?.id);
     const [isShownComments, setIsShownComments] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const {
+        control,
+        handleSubmit,
+        reset
+    } = useForm({
+        resolver: zodResolver(schema),
+        defaultValues: {
+            comment: '',
+        },
+        disabled: loading
+    });
 
     useEffect(() => {
         const { likes, dislikes } = marks.reduce((reducer, mark) => {
@@ -86,6 +108,20 @@ const PostCard: FC<PostProps> = ({ post }) => {
         await addMarks({
             mark: "dislike",
         }, post.id)
+    }
+
+    const onSubmit = async (data: Schema) => {
+        try {
+            setLoading(true)
+            await addComment({
+                content: data.comment,
+                snippetId: post.id
+            })
+
+            reset();
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -150,12 +186,47 @@ const PostCard: FC<PostProps> = ({ post }) => {
                     </Box>
                 </Box>
 
-                <Box>
+                <Box sx={{ maxHeight: '300px', overflow: 'scroll' }}>
                     {isShownComments &&
-                        <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '1rem'}}>
                             {comments.map((comment, index) => (
                                 <CommentCard key={index}>{comment.content}</CommentCard>
                             ))}
+
+                            <form onSubmit={handleSubmit(onSubmit)}>
+                                <Controller
+                                    control={control}
+                                    name="comment"
+                                    render={({
+                                                 field: { onChange, onBlur, value, name },
+                                                 fieldState: { error },
+                                             }) => (
+                                        <TextField
+                                            fullWidth
+                                            label="Comment"
+                                            variant="outlined"
+                                            margin="normal"
+                                            value={value}
+                                            onChange={onChange}
+                                            onBlur={onBlur}
+                                            name={name}
+                                            error={!!error}
+                                            helperText={error?.message}
+                                        />
+                                    )}
+                                />
+
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth sx={{ mt: 2 }}
+                                    loading={loading}
+                                >
+                                    Add comment
+                                </Button>
+                            </form>
+
                         </CardContent>
                     }
 
