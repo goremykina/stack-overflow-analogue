@@ -1,6 +1,6 @@
 import { User } from "./user.model.ts";
 
-export interface Comments {
+export interface CreateCommentRequest {
     content: string,
     snippetId: string
 }

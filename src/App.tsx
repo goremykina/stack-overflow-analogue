@@ -16,6 +16,7 @@ import UsersPage from "./pages/users/UsersPage.tsx";
 import QuestionsPage from "./pages/questions/QuestionsPage.tsx";
 import EditQuestionPage from "./pages/edit-question/EditQuestionPage.tsx";
 import UserPostsPage from "./pages/user-post/UserPostsPage.tsx";
+import ViewPostPage from "./pages/view-post/ViewPostPage.tsx";
 
 const router = createBrowserRouter([
     {
@@ -40,7 +41,8 @@ const router = createBrowserRouter([
             { path: routes.users, element: <UsersPage /> },
             { path: routes.questions, element: <QuestionsPage /> },
             { path: routes.createQuestion, element: <EditQuestionPage /> },
-            { path: routes.userPosts, element: <UserPostsPage /> }
+            { path: routes.userPosts, element: <UserPostsPage /> },
+            { path: routes.post, element: <ViewPostPage /> }
         ]
     },
 

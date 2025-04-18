@@ -18,9 +18,16 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { addComment } from "../../api/comments.ts";
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import { CommentResponse } from "../../models/comments.model.ts";
 
 interface PostProps {
     post: Post,
+    areCommentsShown: boolean,
+    showViewButton?: boolean,
+    enableCommentsScroll?: boolean,
+    onToggleCommentsRequested: () => void,
+    onCommentAdded: (comment: CommentResponse) => void,
 }
 
 const schema = z.object({
@@ -28,15 +35,13 @@ const schema = z.object({
 });
 type Schema = z.infer<typeof schema>;
 
-const PostCard: FC<PostProps> = ({ post }) => {
+const PostCard: FC<PostProps> = ({ post, areCommentsShown, onToggleCommentsRequested, showViewButton, onCommentAdded, enableCommentsScroll }) => {
     const { user, language, code, marks, comments } = post;
-    console.log(comments)
     const [likesCount, setLikesCount] = useState(0);
     const [dislikesCount, setDislikesCount] = useState(0);
     const [isLike, setIsLike] = useState(false)
     const [isDislike, setIsDislike] = useState(false)
     const currentUserId = useStore(store => store.user?.id);
-    const [isShownComments, setIsShownComments] = useState(false)
     const [loading, setLoading] = useState(false);
     const {
         control,
@@ -113,11 +118,12 @@ const PostCard: FC<PostProps> = ({ post }) => {
     const onSubmit = async (data: Schema) => {
         try {
             setLoading(true)
-            await addComment({
+            const newComment = await addComment({
                 content: data.comment,
                 snippetId: post.id
             })
 
+            onCommentAdded(newComment);
             reset();
         } finally {
             setLoading(false)
@@ -131,6 +137,7 @@ const PostCard: FC<PostProps> = ({ post }) => {
                     <PersonOutlineIcon/>
                     {user.username}
                 </Box>
+
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
                     <CodeIcon />
                     {language}
@@ -158,26 +165,37 @@ const PostCard: FC<PostProps> = ({ post }) => {
                     }}
                 >
                     <Box sx={{
-                        display: 'flex'
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.7rem'
                     }}>
-                        <IconButton
-                            onClick={addLikes}
-                            sx={{ display: 'flex', gap: 1,  }}
-                        >
-                            <Typography>{likesCount}</Typography>
-                            <ThumbUpOffAltIcon sx={{ color: isLike ? `${theme.palette.secondary.contrastText}` : '' }} />
-                        </IconButton>
-                        <IconButton
-                            onClick={addDislikes}
-                            sx={{ display: 'flex', gap: 1 }}
-                        >
-                            <Typography>{dislikesCount}</Typography>
-                            <ThumbDownOffAltIcon sx={{ color: isDislike ? `${theme.palette.secondary.light}` : '' }}/>
-                        </IconButton>
+                        <Box sx={{ display: 'flex' }}>
+                            <IconButton
+                                onClick={addLikes}
+                                sx={{ display: 'flex', gap: '0.4rem',  }}
+                            >
+                                <Typography>{likesCount}</Typography>
+                                <ThumbUpOffAltIcon sx={{ color: isLike ? `${theme.palette.secondary.contrastText}` : '' }} />
+                            </IconButton>
+                            <IconButton
+                                onClick={addDislikes}
+                                sx={{ display: 'flex', gap: '0.4rem' }}
+                            >
+                                <Typography>{dislikesCount}</Typography>
+                                <ThumbDownOffAltIcon sx={{ color: isDislike ? `${theme.palette.secondary.light}` : '' }}/>
+                            </IconButton>
+                        </Box>
+
+                        {showViewButton &&
+                            <Link color={'inherit'} underline={'none'} to={`/post/${post.id}`} sx={{ display: 'flex' }}>
+                                <VisibilityOutlinedIcon />
+                            </Link>
+                        }
                     </Box>
                     <Box>
                         <IconButton
-                            onClick={() => setIsShownComments(!isShownComments)}
+                            onClick={onToggleCommentsRequested}
                             sx={{ display: 'flex', gap: 1 }}
                         >
                             <Typography>{comments.length}</Typography>
@@ -186,8 +204,8 @@ const PostCard: FC<PostProps> = ({ post }) => {
                     </Box>
                 </Box>
 
-                <Box sx={{ maxHeight: '300px', overflow: 'scroll' }}>
-                    {isShownComments &&
+                <Box sx={enableCommentsScroll ? { maxHeight: '300px', overflow: 'scroll' } : {}}>
+                    {areCommentsShown &&
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '1rem'}}>
                             {comments.map((comment, index) => (
                                 <CommentCard key={index}>{comment.content}</CommentCard>
@@ -198,9 +216,9 @@ const PostCard: FC<PostProps> = ({ post }) => {
                                     control={control}
                                     name="comment"
                                     render={({
-                                                 field: { onChange, onBlur, value, name },
-                                                 fieldState: { error },
-                                             }) => (
+                                        field: { onChange, onBlur, value, name },
+                                        fieldState: { error },
+                                    }) => (
                                         <TextField
                                             fullWidth
                                             label="Comment"
@@ -230,7 +248,7 @@ const PostCard: FC<PostProps> = ({ post }) => {
                         </CardContent>
                     }
 
-                    {(isShownComments && comments.length === 0) &&
+                    {(areCommentsShown && comments.length === 0) &&
                         <Typography sx={{textAlign: 'center', fontSize: '1.15rem' }}>There are no comments yet</Typography>
                     }
                 </Box>

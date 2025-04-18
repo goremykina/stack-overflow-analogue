@@ -3,6 +3,7 @@ import { Post } from "../../models/post.model.ts";
 import { fetchPosts } from "../../api/posts.ts";
 import { Box, CircularProgress, Pagination, Typography } from "@mui/material";
 import PostCard from "../post-card/PostCard.tsx";
+import { CommentResponse } from "../../models/comments.model.ts";
 
 interface IPostsListProps {
     userId?: string;
@@ -13,6 +14,7 @@ const PostsList : FC<IPostsListProps> = ({ userId }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [areCommentsShownIds, setAreCommentsShownIds] = useState<string[]>([])
 
     useEffect(() => {
         const fetchDataPosts = async () => {
@@ -27,6 +29,19 @@ const PostsList : FC<IPostsListProps> = ({ userId }) => {
         }
         fetchDataPosts();
     }, [currentPage, userId]);
+
+    const handleToggleCommentsRequested = (id: string) => {
+        if (areCommentsShownIds.includes(id)) {
+            const resultIds = areCommentsShownIds.filter((commentId) => commentId !== id)
+            setAreCommentsShownIds(resultIds)
+        } else {
+            setAreCommentsShownIds([...areCommentsShownIds, id])
+        }
+    }
+
+    const handleCommentAdded = (post: Post, comment: CommentResponse) => {
+        post.comments = [...post.comments, comment];
+    }
 
     return (
         <Box>
@@ -63,7 +78,15 @@ const PostsList : FC<IPostsListProps> = ({ userId }) => {
                         flexDirection: 'column',
                     }}>
                     {posts.map((post, index) => (
-                        <PostCard post={post} key={index}/>
+                        <PostCard
+                            post={post}
+                            key={index}
+                            showViewButton={true}
+                            enableCommentsScroll={true}
+                            areCommentsShown={areCommentsShownIds.includes(post.id)}
+                            onToggleCommentsRequested={() => handleToggleCommentsRequested(post.id)}
+                            onCommentAdded={comment => handleCommentAdded(post, comment)}
+                        />
                     ))}
                 </Box>
             }

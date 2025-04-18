@@ -9,4 +9,5 @@ export const routes = Object.freeze({
     questions: '/questions',
     createQuestion: '/create-question',
     userPosts: '/my-posts',
+    post: '/post/:postId',
 } as const);
