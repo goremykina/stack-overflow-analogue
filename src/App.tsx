@@ -17,6 +17,7 @@ import QuestionsPage from "./pages/questions/QuestionsPage.tsx";
 import EditQuestionPage from "./pages/edit-question/EditQuestionPage.tsx";
 import UserPostsPage from "./pages/user-post/UserPostsPage.tsx";
 import ViewPostPage from "./pages/view-post/ViewPostPage.tsx";
+import { Toaster } from "react-hot-toast";
 
 const router = createBrowserRouter([
     {
@@ -69,7 +70,10 @@ function App() {
     }
 
     return (
-        <RouterProvider router={router} />
+        <>
+            <RouterProvider router={router} />
+            <Toaster />
+        </>
     );
 }
 

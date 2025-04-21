@@ -120,6 +120,7 @@ const EditPostPage = () => {
                                     value={value}
                                     onChange={onChange}
                                     onBlur={onBlur}
+                                    required
                                 >
                                     {availableLanguages.map((lang, index) => (
                                         <MenuItem value={lang} key={index}>{lang}</MenuItem>
@@ -143,6 +144,7 @@ const EditPostPage = () => {
                                     onBlur={onBlur}
                                     highlight={(code) => highlight(code, languages.javascript, 'javascript')}
                                     padding={10}
+                                    required
                                     style={{
                                         minHeight: '200px',
                                         backgroundColor: "#f5f5f5",
