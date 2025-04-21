@@ -9,7 +9,7 @@ import theme from "../../theme.ts";
 import { routes } from '../../routes.ts';
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { changeName, changePassword, fetchStatistics } from "../../api/users.ts";
+import { changeName, changePassword, deleteUser, fetchStatistics } from "../../api/users.ts";
 import useStore from "../../store.ts";
 import { User, UserStatistics } from "../../models/user.model.ts";
 
@@ -106,6 +106,15 @@ const AccountPage: FC = () => {
         }
     };
 
+    const deleteAccount = async () => {
+        try {
+            setLoading(true)
+            await deleteUser();
+        } finally {
+            setLoading(false)
+        }
+    }
+
     return (
         <Box sx={{
             display: "flex",
@@ -138,7 +147,7 @@ const AccountPage: FC = () => {
                                 <LogoutIcon sx={{ color: `${theme.palette.secondary.main}` }}/>
                             </IconButton>
 
-                            <IconButton >
+                            <IconButton onClick={deleteAccount}>
                                 <DeleteOutlineIcon sx={{ color: `${theme.palette.secondary.main}`}}/>
                             </IconButton>
 

@@ -7,6 +7,7 @@ import {
     UserStatisticsResponse, UserWithPassword
 } from "../models/user.model.ts";
 import { QueryResponse, ResponseWithData, ResponseWithMessage } from "../models/response.model.ts";
+import useStore from "../store.ts";
 
 export const getCurrentUser = async () => {
     const response = await api.get<ResponseWithData<User>>('me');
@@ -39,4 +40,10 @@ export const getAllUsers = async (page: number = 1) => {
     const response = await api.get<QueryResponse<User[]>>('users', { searchParams: { page }});
     const { data } = await response.json();
 
-    return data;};
+    return data;
+};
+
+export const deleteUser = async () => {
+    await api.delete('me');
+    useStore.setState({ user: null });
+};
